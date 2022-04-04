@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="scripts.js" defer></script>
+    <title>Roundabout</title>
+</head>
+<body>
+    <header><h1>Roundabout</h1></header>
+    <div id="form-container">
+        <fieldset id="round-details">
+            <legend>Round Details</legend>
+            <div id="left-column">
+                <div id="holes">
+                    <p>Select the number of holes:</p>
+                    <div class="radio-input">
+                        <input type="radio" id="9-hole" name="num-holes" required>
+                        <label for="9-hole">9</label>
+                    </div>
+                    <div class="radio-input">
+                        <input type="radio" id="18-hole" name="num-holes">
+                        <label for="18-hole">18</label>
+                    </div>
+                </div>
+                <div id="players">
+                    <label name="num-players">Select the number of players:</label>
+                    <select name="num" id="num-players" onchange="togglePlayerNameFields()">
+                        <option value="--">--</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+            <div id="right-column"></div>
+        </fieldset>
+    </div>
+    <div id="scorecard-container"></div>
+</body>
+</html>
