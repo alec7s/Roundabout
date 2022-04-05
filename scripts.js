@@ -1,10 +1,22 @@
-//declare round and players list
+//declare player class
 
+//player colors: crimson, orangered, forestgreen
+const colors = ['DC143C', 'FF4500', 'DAA520', '228B22', '0000CD'];
+let numPlayers;
+const players = [];
+
+class Player {
+    Player(name, number, color){
+        name = this.name;
+        number = this.number;
+        color = colors[number - 1];
+    }
+}
 
 const togglePlayerNameFields = function(){
 
     //retrieve number of players
-    let numPlayers = document.getElementById('num-players').value;
+    numPlayers = document.getElementById('num-players').value;
 
     //create a player name field for the number of players specified
     let namesContainer = document.querySelector('#player-names');
@@ -53,6 +65,13 @@ const togglePlayerNameFields = function(){
     };
 }
 
-//retrieve player objects from form
+//get player info from form
+const getPlayers = function(){
+    const names = document.querySelectorAll('input').getElementsByClassName('name');
+    console.log(names);
+    /* for(let i = 0; i < names.length; i++){
+        players.push(Player())
+    } */
+}
 
 //retrieve round object from form 

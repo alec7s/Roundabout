@@ -9,8 +9,13 @@ p {
 
 #round-details {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     min-height: 175px;
+}
+
+#fields {
+    display: flex;
+    justify-content:space-around;
 }
 
 #holes {
@@ -19,4 +24,10 @@ p {
 
 #players label {
     margin: 0px 0px 8px 0px;
+}
+
+#start-btn {
+    display: flex;
+    align-items:flex-end;
+    justify-content: center;
 }
