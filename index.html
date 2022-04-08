@@ -18,11 +18,11 @@
                     <div id="holes">
                         <p>Select the number of holes:</p>
                         <div class="radio-input">
-                            <input type="radio" id="9-hole" name="num-holes" required>
+                            <input type="radio" id="9-hole" name="num-holes" value="9" required>
                             <label for="9-hole">9</label>
                         </div>
                         <div class="radio-input">
-                            <input type="radio" id="18-hole" name="num-holes">
+                            <input type="radio" id="18-hole" name="num-holes" value="18">
                             <label for="18-hole">18</label>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <div id="right-column"></div>
             </div>
             <div id="start-btn">
-                <button type="button" onclick="getPlayers()">START</button>
+                <input type="submit" value="START" onclick="startNewRound()"></input>
             </div>
         </fieldset>
     </div>

@@ -2,24 +2,38 @@ p {
     margin: 3px 0px 5px 0px;
 }
 
+header {
+    text-align: center;
+}
+
 .name-field {
     display: flex;
     gap: 5px;
 }
 
 #round-details {
-    display: flex;
-    flex-direction: column;
     min-height: 175px;
+    margin: 0 20% 0 20%;
 }
 
 #fields {
     display: flex;
-    justify-content:space-around;
+    justify-content: space-between;
 }
 
 #holes {
     margin: 0px 0px 8px 0px;
+}
+#left-column {
+    min-width: 50%;
+    min-height: 150px;
+}
+
+#right-column {
+    min-width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 #players label {

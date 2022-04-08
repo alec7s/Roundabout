@@ -1,16 +1,45 @@
 //declare player class
 
 //player colors: crimson, orangered, forestgreen
-const colors = ['DC143C', 'FF4500', 'DAA520', '228B22', '0000CD'];
-let numPlayers;
-const players = [];
 
-class Player {
-    Player(name, number, color){
-        name = this.name;
-        number = this.number;
-        color = colors[number - 1];
+let numPlayers;
+let currentRound;
+const playersArray = [];
+const colors = ['DC143C', 'FF4500', 'DAA520', '228B22', '0000CD'];
+
+const Player = class {
+    constructor(name, number) {
+        this.name = name;
+        this.number = number;
+        
     }
+    get color() {
+        return colors[this.number - 1];
+    };
+}
+
+const Round = class {
+    constructor(numHoles, numPlayers, players){
+        this.numHoles = numHoles;
+        this.numPlayers = numPlayers;
+        this.players = players;
+    }
+}
+
+const startNewRound = function(){
+    //get field values
+    const numHoles = document.querySelector('input[name="num-holes"]:checked').value;
+    const numPlayers = document.getElementById('num-players').value;
+    const players = [];
+
+    const nameFields = document.querySelectorAll('input.name');
+    for(let i = 0; i < nameFields.length; i++){
+        players.push(new Player(nameFields[i].innerText, i + 1));
+    } 
+
+    //create Round class with field values
+    currentRound = new Round(numHoles, numPlayers, players);
+    console.table(currentRound.numHoles, currentRound.numPlayers, currentRound.players);
 }
 
 const togglePlayerNameFields = function(){
@@ -67,11 +96,11 @@ const togglePlayerNameFields = function(){
 
 //get player info from form
 const getPlayers = function(){
-    const names = document.querySelectorAll('input').getElementsByClassName('name');
-    console.log(names);
-    /* for(let i = 0; i < names.length; i++){
-        players.push(Player())
-    } */
+    const nameFields = document.querySelectorAll('input.name');
+    for(let i = 0; i < nameFields.length; i++){
+        playersArray.push(new Player(nameFields[i].value, i + 1));
+    }
+    playersArray.map(player => console.table(player.name, player.number, player.color));
 }
 
 //retrieve round object from form 
