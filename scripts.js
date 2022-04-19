@@ -83,6 +83,7 @@ const togglePlayerNameFields = function(){
 
         //create fields
         let nameField = document.createElement('input');
+        nameField.required = true;
         nameField.setAttribute('type', 'text');
         nameField.setAttribute('id', id);
         nameField.setAttribute('name', name);
@@ -103,4 +104,6 @@ const getPlayers = function(){
     playersArray.map(player => console.table(player.name, player.number, player.color));
 }
 
+
 //retrieve round object from form 
+

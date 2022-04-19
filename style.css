@@ -1,19 +1,116 @@
+html {
+    background-color: #B7CFDC;
+    color: #28333a;
+}
+
+header {
+    margin: 0;
+    text-align: center;
+}
+
+body {
+    margin: 0 20% 0 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 100;
+    letter-spacing: 0.065em;
+}
+
+h1 {
+    margin: 0;
+}
+
 p {
     margin: 3px 0px 5px 0px;
 }
 
-header {
-    text-align: center;
+i {
+    color: #28333a;
+}
+
+fieldset {
+    border-radius: 1.0%;
+    background-color: #D9E4EC;
+    border-color: #385E72;
+}
+
+legend {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+button {
+    background-color: inherit;
+    border: none;
+}
+
+footer a {
+    text-decoration: none;
 }
 
 .name-field {
     display: flex;
     gap: 5px;
+    margin-bottom: 2px;
+}
+
+.chevron-btn {
+    width: 13%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chevron-icon {
+    width: 150%;
+    height: 150%;
+    margin: 0
+}
+
+.chevron-icon:hover {
+    color: #6AABD2;
+    cursor: pointer;
+}
+
+.increment-btn {
+    width: 70%;
+    height: 70%;
+    padding: 0;
+}
+
+.increment-icon {
+    width: 70%;
+    height: 70%;
+}
+
+.increment-icon:hover {
+        color: #6AABD2;
+        cursor: pointer;
+}
+
+.text-btn {
+    border: 2px solid #28333a;
+    border-radius: 10%;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 1.2%;
+}
+
+.text-btn:hover {
+    background-color: #6AABD2;
+    cursor: pointer;
+}
+
+#form-container {
+    flex: 1;
+    margin-bottom: 1.8%;
 }
 
 #round-details {
+    flex: 1;
     min-height: 175px;
-    margin: 0 20% 0 20%;
 }
 
 #fields {
@@ -24,6 +121,7 @@ header {
 #holes {
     margin: 0px 0px 8px 0px;
 }
+
 #left-column {
     min-width: 50%;
     min-height: 150px;
@@ -42,6 +140,68 @@ header {
 
 #start-btn {
     display: flex;
-    align-items:flex-end;
     justify-content: center;
+}
+
+#scorecard-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#scorecard-container form {
+    flex: 1;
+}
+
+#scorecard-container form fieldset {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+#scorecard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    font-size: 40px;
+}
+
+#scorecard-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 20px;
+}
+
+#scorecard-body {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    
+    width: 100%;
+}
+
+#scorecard-header button {
+    
+    margin-left: auto;
+}
+
+#score-btns {
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    gap: 27%;
+}
+
+#chevron-left {
+    margin-right: auto;
+}
+
+#chevron-right {
+    margin-left: auto;
+}
+
+#score {
+    font-size: 210px;
 }
