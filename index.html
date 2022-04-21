@@ -42,7 +42,7 @@
                 <div id="right-column"></div>
             </div>
             <div id="start-btn">
-                <button class="text-btn" onclick="startNewRound()">Start</button>
+                <input class="text-btn" type="submit" value="Start" onclick="startNewRound()"></input>
             </div>
         </fieldset>
     </div>
@@ -54,13 +54,11 @@
                     <p>Hole 1</p>
                     <button class="text-btn">Table</button>
                 </div>
-
                 <div id="scorecard-body">
                     <button class="chevron-btn" id="chevron-left"><i class="chevron-icon" data-feather="chevrons-left"></i></i></button>
                     <div id="scorecard">
-                    
-                        <p>Player 1's Name</p>
-                        <p id="score">03</p>
+                        <p id="player-name"></p>
+                        <p id="score">00</p>
                         <div id="score-btns">
                             <button class="icon-btn increment-btn"><i class="increment-icon" data-feather="plus-square"></i></button>
                             <button class="icon-btn increment-btn"><i class="increment-icon" data-feather="minus-square"></i></button>

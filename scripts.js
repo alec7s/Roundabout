@@ -26,20 +26,31 @@ const Round = class {
     }
 }
 
+const populateScorecard = function(currentRound){
+    //update name field
+    document.getElementById('player-name').textContent = currentRound.players[0].name;
+    console.log(currentRound.players[0].name);
+    //update hole number
+}
+
 const startNewRound = function(){
-    //get field values
-    const numHoles = document.querySelector('input[name="num-holes"]:checked').value;
-    const numPlayers = document.getElementById('num-players').value;
-    const players = [];
 
-    const nameFields = document.querySelectorAll('input.name');
-    for(let i = 0; i < nameFields.length; i++){
-        players.push(new Player(nameFields[i].innerText, i + 1));
-    } 
+    if(validateForm() === true){
+        //get field values
+        const numHoles = document.querySelector('input[name="num-holes"]:checked').value;
+        const numPlayers = document.getElementById('num-players').value;
+        const players = [];
 
-    //create Round class with field values
-    currentRound = new Round(numHoles, numPlayers, players);
-    console.table(currentRound.numHoles, currentRound.numPlayers, currentRound.players);
+        const nameFields = document.querySelectorAll('input.name');
+        for(let i = 0; i < nameFields.length; i++){
+            players.push(new Player(nameFields[i].value, i + 1));
+        } 
+
+        //create Round class with field values
+        currentRound = new Round(numHoles, numPlayers, players);
+
+        populateScorecard(currentRound);
+    }
 }
 
 const togglePlayerNameFields = function(){
@@ -79,7 +90,7 @@ const togglePlayerNameFields = function(){
         nameLabel.textContent = `Player ${playerNum}:`
         nameLabel.setAttribute('for', id);
         nameLabel.setAttribute('name', name);
-        nameLabel.classList.add('name');
+        //nameLabel.classList.add('name');
 
         //create fields
         let nameField = document.createElement('input');
@@ -87,6 +98,10 @@ const togglePlayerNameFields = function(){
         nameField.setAttribute('type', 'text');
         nameField.setAttribute('id', id);
         nameField.setAttribute('name', name);
+        nameField.setAttribute('required', '');
+        nameField.setAttribute('minlength', '1');
+        nameField.setAttribute('maxlength', '35');
+        nameField.setAttribute('pattern', '[a-zA-Z]');
         nameField.classList.add('name');
 
         fieldContainer.appendChild(nameLabel);
@@ -95,15 +110,28 @@ const togglePlayerNameFields = function(){
     };
 }
 
-//get player info from form
-const getPlayers = function(){
-    const nameFields = document.querySelectorAll('input.name');
-    for(let i = 0; i < nameFields.length; i++){
-        playersArray.push(new Player(nameFields[i].value, i + 1));
+const validateForm = function () {
+
+    //num-holes
+    if(!document.getElementById('9-hole').checked && !document.getElementById('18-hole').checked){
+        alert('Please select the number of holes.');
+        return false;
     }
-    playersArray.map(player => console.table(player.name, player.number, player.color));
+    
+    //num-players
+    if(numPlayersValue = document.getElementById('num-players').value === '--'){
+        alert('Please select the number of players.')
+        return false;
+    }
+
+    //names
+    let nameFields = Array.from(document.getElementsByClassName('name'));
+    nameFields.forEach(nameField => {
+        if(nameField.checkValidity() === false) {
+            alert('Enter a valid name.');
+            return false;
+        }
+    });
+
+    return true;
 }
-
-
-//retrieve round object from form 
-
