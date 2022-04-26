@@ -33,6 +33,43 @@ const populateScorecard = function(currentRound){
     //update hole number
 }
 
+const validateForm = function () {
+
+    //num-holes
+    const radioBtn9Hole = document.getElementById('9-hole');
+    const radioBtn18Hole = document.getElementById('18-hole');
+    if(!radioBtn9Hole.checked && !radioBtn18Hole.checked){
+        alert('Please select the number of holes.');
+        return false;
+    }
+    
+    //num-players
+    const numPlayers = document.getElementById('num-players');
+    if(numPlayers.value === '--'){
+        alert('Please select the number of players.')
+        return false;
+    }
+
+    //names
+    const nameFields = Array.from(document.getElementsByClassName('name'));
+    nameFields.forEach(nameField => {
+        if(nameField.checkValidity() === false) {
+            alert('Enter a valid name.');
+            return false;
+        }
+    });
+
+    //disable form
+    radioBtn9Hole.setAttribute('disabled','true');
+    radioBtn18Hole.setAttribute('disabled', 'true');
+    numPlayers.setAttribute('disabled', 'true');
+    nameFields.forEach(nameField => {
+        nameField.setAttribute('disabled', 'true');
+    });
+
+    return true;
+}
+
 const startNewRound = function(){
 
     if(validateForm() === true){
@@ -110,28 +147,3 @@ const togglePlayerNameFields = function(){
     };
 }
 
-const validateForm = function () {
-
-    //num-holes
-    if(!document.getElementById('9-hole').checked && !document.getElementById('18-hole').checked){
-        alert('Please select the number of holes.');
-        return false;
-    }
-    
-    //num-players
-    if(numPlayersValue = document.getElementById('num-players').value === '--'){
-        alert('Please select the number of players.')
-        return false;
-    }
-
-    //names
-    let nameFields = Array.from(document.getElementsByClassName('name'));
-    nameFields.forEach(nameField => {
-        if(nameField.checkValidity() === false) {
-            alert('Enter a valid name.');
-            return false;
-        }
-    });
-
-    return true;
-}

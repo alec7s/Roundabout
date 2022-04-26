@@ -20,6 +20,7 @@ body {
 
 h1 {
     margin: 0;
+    font-size: 55px;
 }
 
 p {
@@ -50,6 +51,8 @@ footer a {
     text-decoration: none;
 }
 
+
+
 .name-field {
     display: flex;
     gap: 5px;
@@ -66,7 +69,8 @@ footer a {
 .chevron-icon {
     width: 150%;
     height: 150%;
-    margin: 0
+    margin: 0;
+    color: #28333a;
 }
 
 .chevron-icon:hover {
@@ -78,6 +82,7 @@ footer a {
     width: 70%;
     height: 70%;
     padding: 0;
+    color: #28333a;
 }
 
 .increment-icon {
@@ -96,6 +101,7 @@ footer a {
     font-size: 18px;
     font-weight: bold;
     padding: 1.2%;
+    background-color: white;
 }
 
 .text-btn:hover {
@@ -191,7 +197,7 @@ footer a {
     display: flex;
     width: 90%;
     justify-content: space-between;
-    gap: 27%;
+    gap: 18%;
 }
 
 #chevron-left {
