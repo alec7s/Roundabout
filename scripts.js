@@ -1,135 +1,117 @@
-//declare player class
-
-//player colors: crimson, orangered, forestgreen
-
 let numPlayers;
 let currentRound;
-const playersArray = [];
-const colors = ['DC143C', 'FF4500', 'DAA520', '228B22', '0000CD'];
+let playersArray = [];
 
-const Player = class {
+// models:
+class Player {
     constructor(name, number) {
         this.name = name;
         this.number = number;
-        
     }
-    get color() {
-        return colors[this.number - 1];
-    };
 }
 
-const Round = class {
-    constructor(numHoles, numPlayers, players){
+class Round {
+    constructor(numHoles, numPlayers, players) {
         this.numHoles = numHoles;
         this.numPlayers = numPlayers;
         this.players = players;
     }
 }
 
-const populateScorecard = function(currentRound){
-    //update name field
+function populateScorecard(currentRound) {
+    // update name field
     document.getElementById('player-name').textContent = currentRound.players[0].name;
-    console.log(currentRound.players[0].name);
-    //update hole number
 }
 
-const validateForm = function () {
-
-    //num-holes
-    const radioBtn9Hole = document.getElementById('9-hole');
-    const radioBtn18Hole = document.getElementById('18-hole');
-    if(!radioBtn9Hole.checked && !radioBtn18Hole.checked){
+function isFormInputValid() {
+    // get input fields from form
+    const text_nameFields = Array.from(document.getElementsByClassName('name'));
+    const dropdown_numPlayers = document.getElementById('num-players');
+    const radio_9Hole = document.getElementById('9-hole');
+    const radio_18Hole = document.getElementById('18-hole');
+    
+    if(!radio_9Hole.checked && !radio_18Hole.checked) {
         alert('Please select the number of holes.');
         return false;
     }
     
-    //num-players
-    const numPlayers = document.getElementById('num-players');
-    if(numPlayers.value === '--'){
+    if(dropdown_numPlayers.value === '--') {
         alert('Please select the number of players.')
         return false;
     }
-
-    //names
-    const nameFields = Array.from(document.getElementsByClassName('name'));
-    nameFields.forEach(nameField => {
+    
+    text_nameFields.forEach(nameField => {
         if(nameField.checkValidity() === false) {
             alert('Enter a valid name.');
             return false;
         }
     });
 
-    //disable form
-    radioBtn9Hole.setAttribute('disabled','true');
-    radioBtn18Hole.setAttribute('disabled', 'true');
-    numPlayers.setAttribute('disabled', 'true');
-    nameFields.forEach(nameField => {
-        nameField.setAttribute('disabled', 'true');
-    });
+    // disable form
+    radio_9Hole.setAttribute('disabled','true');
+    radio_18Hole.setAttribute('disabled', 'true');
+    dropdown_numPlayers.setAttribute('disabled', 'true');
+    text_nameFields.forEach(nameField => nameField.setAttribute('disabled', 'true'));
 
     return true;
 }
 
-const startNewRound = function(){
+function startNewRound() {
 
-    if(validateForm() === true){
-        //get field values
+    if(isFormInputValid()) {
+        // get field values
+        const nameFields = document.querySelectorAll('input.name');
         const numHoles = document.querySelector('input[name="num-holes"]:checked').value;
         const numPlayers = document.getElementById('num-players').value;
-        const players = [];
+        let players = [];
 
-        const nameFields = document.querySelectorAll('input.name');
-        for(let i = 0; i < nameFields.length; i++){
+        for(let i = 0; i < nameFields.length; i++) {
             players.push(new Player(nameFields[i].value, i + 1));
         } 
 
-        //create Round class with field values
+        // create Round class with field values
         currentRound = new Round(numHoles, numPlayers, players);
 
         populateScorecard(currentRound);
     }
 }
 
-const togglePlayerNameFields = function(){
-
-    //retrieve number of players
-    numPlayers = document.getElementById('num-players').value;
-
-    //create a player name field for the number of players specified
+function togglePlayerNameFields() {
+    // create a player name field for the number of players specified
     let namesContainer = document.querySelector('#player-names');
 
-    //ensure nothing is duplicated
-    if(namesContainer !== null){
-        namesContainer.remove();
-    }
+    // retrieve number of players
+    numPlayers = document.getElementById('num-players').value;
 
+    // ensure nothing is duplicated
+    if(namesContainer !== null) namesContainer.remove();
+
+    const rightColumn = document.querySelector('#right-column');
     namesContainer = document.createElement('div');
     namesContainer.setAttribute('id', 'player-names');
-    const rightColumn = document.querySelector('#right-column');
     rightColumn.appendChild(namesContainer);
 
     const nameFieldsLabel = document.createElement('p');
     nameFieldsLabel.textContent = 'Who\'s playing?';
     namesContainer.appendChild(nameFieldsLabel);
-    
 
-    for(let i = 0; i < numPlayers; i++){
+    for(let i = 0; i < numPlayers; i++) {
         let playerNum = i + 1;
         let id = `player-${playerNum}-name`;
         let name = `Player ${playerNum} name`;
 
-        //create field container
+        // create field container
         const fieldContainer = document.createElement('div');
         fieldContainer.classList.add('name-field');
 
-        //create labels
+        // create labels
         let nameLabel = document.createElement('label');
         nameLabel.textContent = `Player ${playerNum}:`
         nameLabel.setAttribute('for', id);
         nameLabel.setAttribute('name', name);
-        //nameLabel.classList.add('name');
+        // nameLabel.classList.add('name');
 
-        //create fields
+        // create fields
         let nameField = document.createElement('input');
         nameField.required = true;
         nameField.setAttribute('type', 'text');
