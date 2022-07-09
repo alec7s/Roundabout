@@ -5,15 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="scripts.js" defer></script>
+    <script type="text/javascript" src="main.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <title>Roundabout</title>
 </head>
 <body>
-    <header><h1>Roundabout</h1></header>
+    <header><p><a href="https://github.com/alec7s" title="Open GitHub page" target="_blank">alec7s</a></p></header>
+    <h1 class="banner">Roundabout</h1>
     <div id="form-container">
         <fieldset id="round-details">
-            <legend>Details</legend>
+            <!-- <legend>Details</legend> -->
             <div id="fields">
                 <div id="left-column">
                     <div id="holes">
@@ -31,7 +32,7 @@
                     </div>
                     <div id="players">
                         <label name="num-players">Select the number of players:</label>
-                        <select name="num" id="num-players" onchange="togglePlayerNameFields()">
+                        <select name="num" id="num-players" onchange="Form.processEvent('Names')">
                             <option value="--">--</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -44,35 +45,35 @@
                 <div id="right-column"></div>
             </div>
             <div id="start-btn">
-                <input class="text-btn" type="submit" value="Start" onclick="startNewRound()"></input>
+                <input class="text-btn" type="submit" value="Start" onclick="Form.processEvent('Start')"></input>
             </div>
         </fieldset>
     </div>
-    <div id="scorecard-container">
+    <div id="scorecard-container" style="visibility: hidden;">
         <form>
             <fieldset>
-                <legend>Score</legend>
+                <!-- <legend>Score</legend> -->
                 <div id="scorecard-header">
-                    <p>Hole 1</p>
-                    <button class="text-btn">Table</button>
+                    <p></p><!--Empty P tag for Hole # label-->
+                    <button type="button" class="text-btn finish-btn" onclick="scorecard.processEvent('Finish')">Finish</button>
+                    <button type="button" class="text-btn">Table</button>
                 </div>
                 <div id="scorecard-body">
-                    <button class="chevron-btn" id="chevron-left"><i class="chevron-icon" data-feather="chevrons-left"></i></i></button>
+                    <button type="button" class="chevron-btn" id="chevron-left"><i class="chevron-icon" data-feather="chevrons-left" onclick="scorecard.processEvent('Previous')"></i></i></button>
                     <div id="scorecard">
                         <p id="player-name"></p>
-                        <p id="score">00</p>
+                        <p id="score"></p>
                         <div id="score-btns">
-                            <button class="icon-btn increment-btn"><i class="increment-icon" data-feather="plus"></i></button>
-                            <button class="icon-btn increment-btn"><i class="increment-icon" data-feather="minus"></i></button>
+                            <button type="button" class="icon-btn increment-btn" onclick="scorecard.processEvent('Add')"><i class="increment-icon" data-feather="plus"></i></button>
+                            <button type="button" class="icon-btn increment-btn" onclick="scorecard.processEvent('Subtract')"><i class="increment-icon" data-feather="minus"></i></button>
                         </div>
                     </div>
-                    <button class="chevron-btn" id="chevron-right"><i class="chevron-icon" data-feather="chevrons-right"></i></button>
+                    <button type="button" class="chevron-btn" id="chevron-right" onclick="scorecard.processEvent('Next')"><i class="chevron-icon" data-feather="chevrons-right"></i></button>
                 </div>
             </fieldset>    
         </form>
     </div>
     <footer>
-        <p><a href="https://github.com/alec7s" title="Open GitHub page" target="_blank">alec7s</a></p>
     </footer>
     <script>
         feather.replace()
