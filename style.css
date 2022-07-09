@@ -90,15 +90,16 @@ button {
 }
 
 .chevron-btn {
-    width: 13%;
+    width: 12vw;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 4vw;
 }
 
 .chevron-icon {
-    width: 150%;
-    height: 150%;
+    width: 10vw;
+    height: 10vw;
     margin: 0;
     color: #FF008E;
 }
@@ -109,15 +110,17 @@ button {
 }
 
 .increment-btn {
-    width: 70%;
-    height: 70%;
+    /* width: 70%;
+    height: 70%; */
+    height: 9vw;
+    width: 9vw;
     padding: 0;
     color: #FF008E;;
 }
 
 .increment-icon {
-    width: 70%;
-    height: 70%;
+    height: 7vw;
+    width: 7vw;
 }
 
 .increment-icon:hover {
