@@ -59,22 +59,30 @@ class Form {
 
     static fields = {
         numPlayers: null,
-        radio9Hole: null,
-        radio18Hole: null,
+        numHoles: null,
         names: null,
     }
 
-    static setFields() {
+    static setFields(id = null) {
         this.fields.numPlayers = document.getElementById('num-players');
-        this.fields.radio9Hole = document.getElementById('9-hole');
-        this.fields.radio18Hole = document.getElementById('18-hole');
+        if(id !== null) this.fields.numHoles = document.getElementById(id);
 
         const names = Array.from(document.getElementsByClassName('name'));
         if(names !== null) this.fields.names = names;
     };
 
+    static selectNumHoles(id) {
+        Form.setFields(id);
+        let btnIds = ['9-hole', '18-hole'];
+        //change selected button style
+        document.getElementById(id).classList.add('hole-btn-selected');
+        //change unselected button style
+        document.getElementById(btnIds.filter(btnId => btnId !== id)[0]).classList.remove('hole-btn-selected');
+    }
+
     static getNumHoles() {
-        return Number((!this.fields.radio9Hole.checked) ? this.fields.radio18Hole.value : this.fields.radio9Hole.value);
+        //return Number((!this.fields.btn9Hole.checked) ? this.fields.btn18Hole.value : this.fields.btn9Hole.value);
+        return Number(this.fields.numHoles.value);
     }
 
 /*
@@ -110,13 +118,15 @@ class Form {
     
             // create labels
             const nameLabel = document.createElement('label');
-            nameLabel.textContent = `Player ${playerNum}:`
+            nameLabel.textContent = `Player ${playerNum}`
             setAttributes([nameLabel], ['for', 'name'], [id, name]);
     
             // create fields
             const nameField = document.createElement('input');
             nameField.required = true;
-            setAttributes([nameField], ['type', 'id', 'name', 'required', 'minlength', 'maxlength', 'pattern'], ['text', id, name, '', '1', '35', '[a-zA-Z]']);
+            setAttributes([nameField], ['type', 'id', 'name', 'required'], ['text', id, name, '']);
+            nameField.maxLength = '10';
+            nameField.minLength = '1';
             nameField.classList.add('name');
     
             fieldContainer.appendChild(nameLabel);
@@ -129,7 +139,7 @@ class Form {
 
         Form.setFields();
 
-        if(!Form.fields.radio9Hole.checked && !Form.fields.radio18Hole.checked) {
+        if(Form.fields.numHoles === null) {
             alert('Please select the number of holes.');
             return false;
         }
@@ -157,29 +167,37 @@ class Form {
                 {type: 'id', name: 'num-players'},
                 {type: 'id', name: '9-hole'},
                 {type: 'id', name: '18-hole'},
-                {type: 'value', name: 'Start', parentElement: 'input'}), 
-                // modify elements attribute:
-                ['disabled'], 
-                // change attribute value:
-                ['true']);
-            document.getElementById('start-btn').setAttribute('background-color', '#808080');
+                {type: 'value', name: 'Start', parentElement: 'input'}
+            ), 
+            // modify elements attribute:
+            ['disabled'], 
+            // change attribute value:
+            ['true']
+        );
+            document.getElementById('start-btn').setAttribute('style', 'background-color: #D22779');
     }
 
 //  Use user input from form to initialize Round and scorecard classes
     static initNewRound() {
+
+        console.log(Form.fields.numHoles.value);
         let players = [];
         
         Form.fields.names.forEach((name, i) => {
-            let player = new Player(Form.fields.names[i].value, i + 1, Form.getNumHoles());
+            let player = new Player(name.value, i + 1, Form.getNumHoles());
             players.push(player);
         });
         
         currentRound = new Round(Form.getNumHoles(), Form.fields.numPlayers.value, players);
         scorecard = new Scorecard(currentRound.players[0].name, currentRound.players[0].scores[0], 1);
+        window.location.hash = '#scorecard-header';
     }
 
-    static processEvent(value) {
+    static processEvent(value, id = null) {
         switch(value){
+            case 'Holes':
+                Form.selectNumHoles(id);
+                break;
             case 'Names':
                 Form.togglePlayerNameFields();
                 break;
@@ -211,9 +229,78 @@ class Scorecard {
         document.getElementById('scorecard-container').style.visibility = 'visible';
     }
 
-    setScore(action) {
+    createScoreTable(dialog) {
+        //create score table that lists scores for each player and hole
+        let table = document.createElement('table');
+        table.setAttribute('style', 'color: #612897');
+
+        let tbody = document.createElement('tbody'); 
+
+        //create hole number headers
+        tbody.scoreLabels = tbody.insertRow();
+        for(let i = 0; i <= currentRound.numHoles; i++) {
+            let cell = tbody.scoreLabels.insertCell();
+            //cell.setAttribute('style', 'font-weight: bold');
+            cell.classList.add('card-label');
+            if(i !== 0) cell.textContent = i;
+        }
+
+        //add player names
+        currentRound.players.forEach(player => {
+            let playerRow = tbody.insertRow();
+            let playerName = playerRow.insertCell();
+            //playerName.setAttribute('style', 'font-weight: bold');
+            playerName.classList.add('card-label');
+            playerName.textContent = player.name;
+
+            //add scores for each player
+            player.scores.forEach(score => {
+                let holeScore = playerRow.insertCell();
+                holeScore.textContent = score;
+            })
+        });
+        table.appendChild(tbody);
+        dialog.appendChild(table);
+    }
+
+    openScoreTableDialog() {
+        let dialog = document.createElement('dialog');
+
+        //dialog attributes:
+        dialog.classList.add('dialog');
+
+        //dialog body:
+        this.createScoreTable(dialog);
+
+        //close btn:
+        dialog.closeBtnContainer = document.createElement('div');
+        dialog.closeBtnContainer.classList.add('close-btn-container');
+        
+        dialog.closeBtn = document.createElement('button');
+        dialog.closeBtn.classList.add('gray-btn');
+        dialog.closeBtn.setAttribute('type', 'button');
+        dialog.closeBtn.addEventListener('click', ()=>{
+            console.log('close button clicked');
+            dialog.remove();
+        });
+        dialog.closeBtn.textContent = 'Close';
+
+        dialog.closeBtnContainer.appendChild(dialog.closeBtn);
+        dialog.appendChild(dialog.closeBtnContainer);
+        document.getElementById('scorecard-header').appendChild(dialog);
+
+        if (typeof dialog.showModal === "function") {
+            dialog.showModal();
+        } else {
+            console.log('error');
+            dialog.hidden = 'true';
+        }   
+        
+    }
+
+    setScore(action, id) {
         //update score
-        action === 'Add' ? this.score++ : (this.score > 0 ? this.score-- : this.score = 0);
+        action === 'Add' ? (this.score < 99 ? this.score++ : this.score) : (this.score > 0 ? this.score-- : this.score = 0);
 
         //save score
         currentRound.players[this.playerIndex].scores[this.holeNum - 1] = this.score;
@@ -269,10 +356,15 @@ class Scorecard {
     }
 
     next() {
-        let conditions = {
-            isLastPlayer: this.playerIndex + 1 === currentRound.players.length,
-            isNotLastHole: this.holeNum + 1 <= currentRound.numHoles,
-        };
+        let conditions = {};
+        const setConditions = function(playerIndex, holeNum) {
+            conditions.isLastPlayer = playerIndex + 1 === currentRound.players.length;
+            conditions.isLastPlayerTest = playerIndex + 1 === currentRound.numPlayers;
+            conditions.isNotLastHole = holeNum + 1 <= currentRound.numHoles;
+            conditions.isLastHole = holeNum === currentRound.numHoles;
+        }
+        
+        setConditions(this.playerIndex, this.holeNum);
         //increase hole number and restart player scoring if currently on last player and NOT on last hole
         if(conditions.isLastPlayer && conditions.isNotLastHole) {
             this.playerIndex = 0;
@@ -282,13 +374,16 @@ class Scorecard {
             this.playerIndex++;
         }
 
+        setConditions(this.playerIndex, this.holeNum);
         //make finish button visible if last player and last hole
-        if(!conditions.isNotLastHole && conditions.isLastPlayer) {
-            document.getElementsByClassName('finish-btn')[0].style.visibility = 'visible';
+
+        if(conditions.isLastHole && conditions.isLastPlayer) {
+            document.getElementById('finish-btn').style.visibility = 'visible';
         }
     }
 
     previous() {
+        document.getElementById('finish-btn').style.visibility = 'hidden';
         let conditions = {
             isFirstPlayer: this.playerIndex === 0,
             isFirstHole: this.holeNum === 1,
@@ -297,7 +392,6 @@ class Scorecard {
         if(conditions.isFirstPlayer && !conditions.isFirstHole) {
             this.playerIndex = currentRound.players.length - 1;
             this.holeNum--;
-            document.getElementsByClassName('finish-btn')[0].style.visibility = 'hidden';
         } else if(!conditions.isFirstPlayer) {
             this.playerIndex--;
         }
@@ -316,13 +410,13 @@ class Scorecard {
         return window.confirm(this.message.text);
     }
 
-    processEvent(value) {
+    processEvent(value, id) {
         switch(value){
             case 'Add':
-                this.setScore('Add');
+                this.setScore('Add', id);
                 break;
             case 'Subtract':
-                this.setScore('Subtract');
+                this.setScore('Subtract', id);
                 break;
             case 'Next':
                 this.next();
@@ -332,6 +426,9 @@ class Scorecard {
                 break;
             case 'Finish':
                 if(this.displayWinner()) window.location.reload();
+                break;
+            case 'Card':
+                this.openScoreTableDialog();
                 break;
             default: 
                 break;

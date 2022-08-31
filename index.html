@@ -10,28 +10,17 @@
     <title>Roundabout</title>
 </head>
 <body>
-    <header><p><a href="https://github.com/alec7s" title="Open GitHub page" target="_blank">alec7s</a></p></header>
-    <h1 class="banner">Roundabout</h1>
+    <header><i data-feather="circle" fill="#FFFFFF"></i><h1>Roundabout</h1></header>
     <div id="form-container">
         <fieldset id="round-details">
-            <!-- <legend>Details</legend> -->
             <div id="fields">
                 <div id="left-column">
                     <div id="holes">
-                        <p>Select the number of holes:</p>
-                        <div class="radio-btns">
-                            <div>
-                                <input type="radio" id="9-hole" name="num-holes" value="9" required>
-                                <label for="9-hole">9</label>
-                            </div>
-                            <div>
-                                <input type="radio" id="18-hole" name="num-holes" value="18">
-                                <label for="18-hole">18</label>
-                            </div>
-                        </div>
+                        <button id="9-hole" type="button" class="gray-btn" value="9" onclick="Form.processEvent('Holes', '9-hole')" required>9 holes</button>
+                        <button id="18-hole" type="button" class="gray-btn" value="18" onclick="Form.processEvent('Holes', '18-hole')">18 holes</button>
                     </div>
                     <div id="players">
-                        <label name="num-players">Select the number of players:</label>
+                        <label name="num-players">Number of players</label>
                         <select name="num" id="num-players" onchange="Form.processEvent('Names')">
                             <option value="--">--</option>
                             <option value="1">1</option>
@@ -44,28 +33,27 @@
                 </div>
                 <div id="right-column"></div>
             </div>
-            <div id="start-btn">
-                <input class="text-btn" type="submit" value="Start" onclick="Form.processEvent('Start')"></input>
+            <div id="start-btn-container">
+                <input class="pink-btn" id="start-btn" type="submit" value="Start" onclick="Form.processEvent('Start')"></input>
             </div>
         </fieldset>
     </div>
     <div id="scorecard-container" style="visibility: hidden;">
         <form>
             <fieldset>
-                <!-- <legend>Score</legend> -->
                 <div id="scorecard-header">
-                    <p></p><!--Empty P tag for Hole # label-->
-                    <button type="button" class="text-btn finish-btn" onclick="scorecard.processEvent('Finish')">Finish</button>
-                    <button type="button" class="text-btn">Table</button>
+                    <p></p>
+                    <div id="card-btn-container"><button id="card-btn" type="button" class="gray-btn" onclick="scorecard.processEvent('Card')">Card</button></div>
                 </div>
+                <button class="pink-btn" id="finish-btn" type="button" onclick="scorecard.processEvent('Finish')">Finish</button>
                 <div id="scorecard-body">
                     <button type="button" class="chevron-btn" id="chevron-left"><i class="chevron-icon" data-feather="chevrons-left" onclick="scorecard.processEvent('Previous')"></i></i></button>
                     <div id="scorecard">
                         <p id="player-name"></p>
                         <p id="score"></p>
                         <div id="score-btns">
-                            <button type="button" class="icon-btn increment-btn" onclick="scorecard.processEvent('Add')"><i class="increment-icon" data-feather="plus"></i></button>
-                            <button type="button" class="icon-btn increment-btn" onclick="scorecard.processEvent('Subtract')"><i class="increment-icon" data-feather="minus"></i></button>
+                            <button id = "inc-score" type="button" class="icon-btn increment-btn" onclick="scorecard.processEvent('Subtract', 'inc-score')"><i class="increment-icon" data-feather="minus"></i></button>
+                            <button id = "dec-score" type="button" class="icon-btn increment-btn" onclick="scorecard.processEvent('Add', 'dec-score')"><i class="increment-icon" data-feather="plus"></i></button>
                         </div>
                     </div>
                     <button type="button" class="chevron-btn" id="chevron-right" onclick="scorecard.processEvent('Next')"><i class="chevron-icon" data-feather="chevrons-right"></i></button>
@@ -74,6 +62,7 @@
         </form>
     </div>
     <footer>
+        <a href="https://github.com/alec7s" title="Open GitHub page" target="_blank">Github</a>
     </footer>
     <script>
         feather.replace()
