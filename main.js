@@ -22,7 +22,7 @@ function getElementsBy(...attributes) {
                 element = document.querySelector(`${attributes.parentElement}[value=${attributes.name}]`);
                 break;
             default:
-                console.log('switch case defaulted');
+                //console.log('switch case defaulted');
                 break;
         }
         if(attributes.type !== 'class') elements.push(element);
@@ -62,7 +62,7 @@ class Form {
         numHoles: null,
         names: null,
     }
-
+    //set numPlayers, numHoles, and names properties of fields objects
     static setFields(id = null) {
         this.fields.numPlayers = document.getElementById('num-players');
         if(id !== null) this.fields.numHoles = document.getElementById(id);
@@ -71,7 +71,8 @@ class Form {
         if(names !== null) this.fields.names = names;
     };
 
-    static selectNumHoles(id) {
+    // add or remove styling based on which holes button is clicked
+    static styleSelectedHolesBtn(id) {
         Form.setFields(id);
         let btnIds = ['9-hole', '18-hole'];
         //change selected button style
@@ -79,56 +80,59 @@ class Form {
         //change unselected button style
         document.getElementById(btnIds.filter(btnId => btnId !== id)[0]).classList.remove('hole-btn-selected');
     }
-
+    // get the number of holes for the round selected in the form
     static getNumHoles() {
         //return Number((!this.fields.btn9Hole.checked) ? this.fields.btn18Hole.value : this.fields.btn9Hole.value);
         return Number(this.fields.numHoles.value);
     }
 
-/*
-    Create the text input fields for player names. The number of fields will match the number of selected players and will automatically update when the selected number of players changes.
-*/
+    /*
+        Create the text input fields for player names. The number of fields will match the number of selected players and will automatically update when the selected number of players changes.
+    */
     static togglePlayerNameFields() {
         Form.setFields();
-
-        // create a player name field for the number of players specified
+        //check if container for names fields already exists and remove it if it does to avoid duplication of fields
         let namesContainer = document.querySelector('#player-names');
-    
-        // ensure nothing is duplicated
         if(namesContainer !== null) namesContainer.remove();
     
-        //TODO: consider adding new element object/function
+        //select parent of namesContainer. Names container to be appended to parent.
         const rightColumn = document.querySelector('#right-column');
+
+        //create parent container for names fields and append to parent div (rightColumn)
         namesContainer = document.createElement('div');
         namesContainer.setAttribute('id', 'player-names');
         rightColumn.appendChild(namesContainer);
     
+        //create text label for names fields and append to parent (namesContainer)
         const nameFieldsLabel = document.createElement('p');
         nameFieldsLabel.textContent = 'Who\'s playing?';
         namesContainer.appendChild(nameFieldsLabel);
     
         for(let i = 0; i < Form.fields.numPlayers.value; i++) {
-            let playerNum = i + 1;
-            let id = `player-${playerNum}-name`;
-            let name = `Player ${playerNum} name`;
+            //set the playerNum, id and name for each player
+            const playerNum = i + 1;
+            const id = `player-${playerNum}-name`;
+            const name = `Player ${playerNum} name`;
     
-            // create field container
+            // create name field container and add styling
             const fieldContainer = document.createElement('div');
             fieldContainer.classList.add('name-field');
     
-            // create labels
+            // create individual field labels for each player #
             const nameLabel = document.createElement('label');
-            nameLabel.textContent = `Player ${playerNum}`
+            nameLabel.textContent = `Player ${playerNum}`;
             setAttributes([nameLabel], ['for', 'name'], [id, name]);
     
-            // create fields
+            // create text input fields for each player
             const nameField = document.createElement('input');
-            nameField.required = true;
+            //add validation and other attributes to input field
             setAttributes([nameField], ['type', 'id', 'name', 'required'], ['text', id, name, '']);
+            nameField.required = true;
             nameField.maxLength = '10';
             nameField.minLength = '1';
             nameField.classList.add('name');
     
+            //append label, field, and container to parent
             fieldContainer.appendChild(nameLabel);
             fieldContainer.appendChild(nameField);
             namesContainer.appendChild(fieldContainer);
@@ -159,9 +163,10 @@ class Form {
         return true;
     }
 
-//  Gray out form input to prevent changes to entries
+    //  Gray out form input to prevent changes to entries
     static disable() {
         setAttributes(
+            //select form elements to disable:
             getElementsBy(
                 {type: 'class', name: 'name'},
                 {type: 'id', name: 'num-players'},
@@ -174,29 +179,32 @@ class Form {
             // change attribute value:
             ['true']
         );
+            //modify btn color to appear disabled
             document.getElementById('start-btn').setAttribute('style', 'background-color: #D22779');
     }
 
-//  Use user input from form to initialize Round and scorecard classes
+    //  Use user input from form to initialize Round and scorecard classes
     static initNewRound() {
 
-        console.log(Form.fields.numHoles.value);
+        //console.log(Form.fields.numHoles.value);
         let players = [];
         
+        //initialize new player classes for each player entered in form and add each to players array
         Form.fields.names.forEach((name, i) => {
             let player = new Player(name.value, i + 1, Form.getNumHoles());
             players.push(player);
         });
-        
+        //initialize new round and scorecard classes using form values and players array
         currentRound = new Round(Form.getNumHoles(), Form.fields.numPlayers.value, players);
         scorecard = new Scorecard(currentRound.players[0].name, currentRound.players[0].scores[0], 1);
+        //shift view to scorecard
         window.location.hash = '#scorecard-header';
     }
 
     static processEvent(value, id = null) {
         switch(value){
             case 'Holes':
-                Form.selectNumHoles(id);
+                Form.styleSelectedHolesBtn(id);
                 break;
             case 'Names':
                 Form.togglePlayerNameFields();
@@ -231,31 +239,28 @@ class Scorecard {
 
     createScoreTable(dialog) {
         //create score table that lists scores for each player and hole
-        let table = document.createElement('table');
+        const table = document.createElement('table');
         table.setAttribute('style', 'color: #612897');
-
-        let tbody = document.createElement('tbody'); 
+        const tbody = document.createElement('tbody'); 
 
         //create hole number headers
         tbody.scoreLabels = tbody.insertRow();
         for(let i = 0; i <= currentRound.numHoles; i++) {
-            let cell = tbody.scoreLabels.insertCell();
-            //cell.setAttribute('style', 'font-weight: bold');
+            const cell = tbody.scoreLabels.insertCell();
             cell.classList.add('card-label');
             if(i !== 0) cell.textContent = i;
         }
 
         //add player names
         currentRound.players.forEach(player => {
-            let playerRow = tbody.insertRow();
-            let playerName = playerRow.insertCell();
-            //playerName.setAttribute('style', 'font-weight: bold');
+            const playerRow = tbody.insertRow();
+            const playerName = playerRow.insertCell();
             playerName.classList.add('card-label');
             playerName.textContent = player.name;
 
             //add scores for each player
             player.scores.forEach(score => {
-                let holeScore = playerRow.insertCell();
+                const holeScore = playerRow.insertCell();
                 holeScore.textContent = score;
             })
         });
@@ -264,7 +269,7 @@ class Scorecard {
     }
 
     openScoreTableDialog() {
-        let dialog = document.createElement('dialog');
+        const dialog = document.createElement('dialog');
 
         //dialog attributes:
         dialog.classList.add('dialog');
@@ -280,7 +285,6 @@ class Scorecard {
         dialog.closeBtn.classList.add('gray-btn');
         dialog.closeBtn.setAttribute('type', 'button');
         dialog.closeBtn.addEventListener('click', ()=>{
-            console.log('close button clicked');
             dialog.remove();
         });
         dialog.closeBtn.textContent = 'Close';
@@ -292,27 +296,34 @@ class Scorecard {
         if (typeof dialog.showModal === "function") {
             dialog.showModal();
         } else {
-            console.log('error');
             dialog.hidden = 'true';
         }   
         
     }
 
-    setScore(action, id) {
-        //update score
-        action === 'Add' ? (this.score < 99 ? this.score++ : this.score) : (this.score > 0 ? this.score-- : this.score = 0);
+    setScore(action) {
+        action === 'Add' ? 
+        (
+            //increase score if action is Add and score is less than 99
+            this.score < 99 ? 
+                this.score++ : 
+                this.score
+        ) : 
+        (
+            //decrease score if action is subtract and score is grerater than 0
+            this.score > 0 ? 
+                this.score-- :
+                this.score = 0
+        );
 
-        //save score
+        //update player class inside round class to save score for player
         currentRound.players[this.playerIndex].scores[this.holeNum - 1] = this.score;
     }
 
     getLabels() {
-        //name
         this.playerName = currentRound.players[this.playerIndex].name;
 
-        //score
         this.score = currentRound.players[this.playerIndex].scores[this.holeNum - 1];
-        console.log(`saved scores: ${currentRound.players[this.playerIndex].scores}`);
     }
 
     setLabels() {
@@ -324,11 +335,11 @@ class Scorecard {
     }
 
     getResults() {
-        // get each player's final score
+        // get each player's final score by summing scores for each hole
         this.finalScores = currentRound.players.map(player => player.scores.reduce((previousScore, nextScore) => previousScore + nextScore)); 
 
-        // get winning score
-        let results = {
+        // create results object
+        const results = {
             score: this.finalScores.reduce(function(a, b) {
                 return Math.min(a, b);
             }),
@@ -340,15 +351,17 @@ class Scorecard {
             winningNamesFormatted: '',
         }
         
-        //get score indexes results property
+        //set scoreIndexes of winning scores in results object
         this.finalScores.forEach((score, index) => {if(score === results.score) results.scoreIndexes.push(index)});
 
-        //get winning names results property
+        //get winning names for each winning scoreIndex
         results.scoreIndexes.forEach(index => results.winningNames.push(currentRound.players[index].name));
 
         if(results.isTie()) {
+            //if round result is a tie, then format names as list in string value
             results.winningNames.forEach(name => results.winningNamesFormatted += `${name}\n`);
         } else {
+            //if round is not a tie, then only include a single name in the string value
             results.winningNamesFormatted = results.winningNames[0];
         }
 
@@ -356,10 +369,20 @@ class Scorecard {
     }
 
     next() {
-        let conditions = {};
-        const setConditions = function(playerIndex, holeNum) {
+        //create conditions object and set conditions properties
+        const conditions = {
+            /* isLastPlayer: function() {
+                return this.playerIndex + 1 === currentRound.players.length;
+            },
+            isNotLastHole: function() {
+                return this.holeNum + 1 <= currentRound.numHoles;
+            },
+            isLastHole: function() {
+                return this.holeNum === currentRound.numHoles;
+            } */
+        };
+        function setConditions (playerIndex, holeNum) {
             conditions.isLastPlayer = playerIndex + 1 === currentRound.players.length;
-            conditions.isLastPlayerTest = playerIndex + 1 === currentRound.numPlayers;
             conditions.isNotLastHole = holeNum + 1 <= currentRound.numHoles;
             conditions.isLastHole = holeNum === currentRound.numHoles;
         }
@@ -376,7 +399,6 @@ class Scorecard {
 
         setConditions(this.playerIndex, this.holeNum);
         //make finish button visible if last player and last hole
-
         if(conditions.isLastHole && conditions.isLastPlayer) {
             document.getElementById('finish-btn').style.visibility = 'visible';
         }
@@ -384,7 +406,7 @@ class Scorecard {
 
     previous() {
         document.getElementById('finish-btn').style.visibility = 'hidden';
-        let conditions = {
+        const conditions = {
             isFirstPlayer: this.playerIndex === 0,
             isFirstHole: this.holeNum === 1,
         }
@@ -403,8 +425,8 @@ class Scorecard {
 
             names: this.results.winningNamesFormatted,
             text: (this.results.isTie()) ? 
-            `The winners are:\n${this.results.winningNamesFormatted}...with scores of ${this.results.score}\n\nPlay again?` :
-            `The winner is ${this.results.winningNamesFormatted} with a score of ${this.results.score}!\n\nPlay again?`,
+                `The winners are:\n${this.results.winningNamesFormatted}...with scores of ${this.results.score}\n\nPlay again?` :
+                `The winner is ${this.results.winningNamesFormatted} with a score of ${this.results.score}!\n\nPlay again?`,
         }
 
         return window.confirm(this.message.text);
